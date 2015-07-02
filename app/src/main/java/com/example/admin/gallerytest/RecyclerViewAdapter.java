@@ -6,6 +6,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.TextView;
 
 import com.squareup.picasso.Picasso;
 
@@ -24,13 +26,21 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
      */
     private ImageView standardImageView;
 
+    private LinearLayout expandLinearLayout;
+
+    private TextView textView;
+
     private Context context;
 
-    public RecyclerViewAdapter(Context context, List<ImageInfo> urls, ImageView iv) {
+
+
+    public RecyclerViewAdapter(Context context, List<ImageInfo> urls, ImageView iv,LinearLayout expandLinearLayout,TextView textView) {
         super();
         this.context = context;
         this.urls = urls;
         this.standardImageView = iv;
+        this.expandLinearLayout = expandLinearLayout;
+        this.textView = textView;
     }
 
 
@@ -55,7 +65,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
                 @Override
                 public void onClick(View v) {
                     setStandardImage(position,standardImageView);
-                    standardImageView.setVisibility(View.VISIBLE);
+                    expandLinearLayout.setVisibility(View.VISIBLE);
                 }
             });
         }
@@ -75,6 +85,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
     public void setStandardImage(int position, ImageView view) {
                 String url = urls.get(position).getStandard();
                 Picasso.with(this.context).load(url).placeholder(R.drawable.loadingimage).into(view);
+                textView.setText(urls.get(position).getText());
     }
 
     static class ViewHolder extends RecyclerView.ViewHolder {

@@ -11,11 +11,9 @@ import com.squareup.picasso.Picasso;
 import java.util.List;
 
 /**
- * 現在使用していない
  * Created by admin on 2015/06/28.
  */
 public class GridViewAdapter extends BaseAdapter {
-
     /**
      * 画像情報のリスト
      */

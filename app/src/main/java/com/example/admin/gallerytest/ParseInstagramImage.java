@@ -34,7 +34,9 @@ public class ParseInstagramImage extends ParseJson {
             while (ite.hasNext()) {
                 JsonNode j = ite.next();
                 // 画像情報（URL）をリストに追加
-                this.imageList.add(j.path("images").path("thumbnail").path("url").asText(), j.path("images").path("standard_resolution").path("url").asText());
+                this.imageList.add(j.path("images").path("thumbnail").path("url").asText(),
+                        j.path("images").path("standard_resolution").path("url").asText(),
+                        j.path("caption").path("text").asText());
             }
         }
     }

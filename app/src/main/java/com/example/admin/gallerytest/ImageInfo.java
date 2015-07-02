@@ -12,6 +12,10 @@ public class ImageInfo {
      * ƒTƒ€ƒlƒCƒ‹‰æ‘œ‚ÌURL
      */
     private String thumbnail;
+    /**
+     * à–¾
+     */
+    private String text;
 
 
     public String getStandard() {
@@ -28,5 +32,13 @@ public class ImageInfo {
 
     public void setThumbnail(String thumbnail) {
         this.thumbnail = thumbnail;
+    }
+
+    public String getText() {
+        return text;
+    }
+
+    public void setText(String text) {
+        this.text = text;
     }
 }

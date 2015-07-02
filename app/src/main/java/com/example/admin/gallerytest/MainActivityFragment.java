@@ -7,43 +7,56 @@ import android.os.Bundle;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.SearchView;
+import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.TextView;
 
 
-/**
- * A placeholder fragment containing a simple view.
- */
 public class MainActivityFragment extends Fragment implements LoaderManager.LoaderCallbacks<String>, SwipeRefreshLayout.OnRefreshListener {
 
     /**
      * 検索したいタグ
      */
-//    private final String TAG = "iQon";
-    private final String TAG = "photooftheday";
+//    private String tag = "iQon";
+    private String tag = "photooftheday";
 
 
-    private SwipeRefreshLayout swipeRefreshLayout = null;
     /**
      * 画像の情報を持ったクラスのリスト
      */
-    private ImageInfoList imageList = new ImageInfoList("https://api.instagram.com/v1/tags/" + TAG + "/media/recent?client_id=8f159dc9bf334630a37fdf4e607044cb");
-
+    private ImageInfoList imageList = new ImageInfoList(generateUrl(tag));
     /**
      * Instagram API 解析クラス
      */
     private ParseInstagramImage parseInstagramImage = new ParseInstagramImage(this.imageList);
-
-
-    private RecyclerViewAdapter recyclerViewAdapter = null;
-
     /**
      * 拡大用ImageView
      */
     private ImageView imageView;
 
+    /**
+     * 拡大用レイアウト
+     */
+    private LinearLayout expandLinearLayout = null;
+
+    /**
+     * 拡大用説明文TextView
+     */
+    private TextView captionTextView = null;
+
+    private SwipeRefreshLayout swipeRefreshLayout = null;
+
+    private RecyclerViewAdapter recyclerViewAdapter = null;
+
+    /**
+     * tag表示用TextView
+     */
+    private TextView tagTextView = null;
 
     public MainActivityFragment() {
     }
@@ -73,6 +86,7 @@ public class MainActivityFragment extends Fragment implements LoaderManager.Load
         super.onActivityCreated(savedInstanceState);
         setRetainInstance(true);
 
+
         this.swipeRefreshLayout = (SwipeRefreshLayout) getView().findViewById(R.id.SwipeRefreshLayout);
         // プログレスアニメーションの色指定
         this.swipeRefreshLayout.setColorScheme(android.R.color.holo_blue_bright, android.R.color.holo_green_light, android.R.color.holo_orange_light, android.R.color.holo_red_light);
@@ -80,20 +94,46 @@ public class MainActivityFragment extends Fragment implements LoaderManager.Load
         this.swipeRefreshLayout.setOnRefreshListener(MainActivityFragment.this);
 
 
-
         RecyclerView recyclerView = (RecyclerView)getView().findViewById(R.id.recyclerview);
         //グリッドビューっぽく
-        recyclerView.setLayoutManager(new GridLayoutManager(getActivity(),getResources().getInteger(R.integer.num)));
+        recyclerView.setLayoutManager(new GridLayoutManager(getActivity(), getResources().getInteger(R.integer.num)));
 
 
-        imageView = (ImageView) getView().findViewById(R.id.imageView);
-        //拡大アイテムタッチ処理(アイテムを非表示にする)
-        getView().findViewById(R.id.imageView).setOnClickListener(new View.OnClickListener() {
+        Toolbar toolbar = (Toolbar)getView().findViewById(R.id.toolbar);
+        toolbar.setTitle("Instagram Gallery");
+        toolbar.inflateMenu(R.menu.search);
+
+
+        SearchView searchView = (SearchView)toolbar.getMenu().findItem(R.id.menu_search).getActionView();
+        searchView.setQueryHint("tag");
+        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+
             @Override
-            public void onClick(View v) {
-                imageView.setVisibility(View.INVISIBLE);
+            public boolean onQueryTextSubmit(String query) {
+                search(query);
+                return false;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String newText) {
+                return false;
             }
         });
+
+
+        tagTextView = (TextView)getView().findViewById(R.id.tag_textView);
+        tagTextView.setText("#" + tag);
+
+
+        expandLinearLayout = (LinearLayout)getView().findViewById(R.id.expand_LinearLayout);
+        //拡大アイテムタッチ処理(アイテムを非表示にする)
+        expandLinearLayout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                expandLinearLayout.setVisibility(View.INVISIBLE);
+            }
+        });
+        imageView = (ImageView)getView().findViewById(R.id.imageView);
 
         //初回
         if (this.recyclerViewAdapter == null) {
@@ -108,7 +148,7 @@ public class MainActivityFragment extends Fragment implements LoaderManager.Load
     }
 
     private void setAdapter(View view) {
-        this.recyclerViewAdapter = new RecyclerViewAdapter(getActivity(),this.imageList.getImageInfoList(),imageView);
+        this.recyclerViewAdapter = new RecyclerViewAdapter(getActivity(),this.imageList.getImageInfoList(),imageView,expandLinearLayout,(TextView)getView().findViewById(R.id.caption_textView));
         ((RecyclerView) view).setAdapter(this.recyclerViewAdapter);
 
     }
@@ -141,8 +181,8 @@ public class MainActivityFragment extends Fragment implements LoaderManager.Load
     public void onLoadFinished(Loader<String> loader, String data) {
         if (data == null) return;
 
-        this.parseInstagramImage.loadJson(data); // APIのレスポンスを解析する
-
+        // APIのレスポンスを解析する
+        this.parseInstagramImage.loadJson(data);
 
         if (this.recyclerViewAdapter == null) {
             setAdapter(getView().findViewById(R.id.recyclerview));
@@ -165,4 +205,18 @@ public class MainActivityFragment extends Fragment implements LoaderManager.Load
     public void onRefresh() {
         startLoader(0);
     }
+
+    public String generateUrl(String tag){
+        return "https://api.instagram.com/v1/tags/" + tag + "/media/recent?client_id=8f159dc9bf334630a37fdf4e607044cb";
+    }
+
+    public void search(String query){
+        swipeRefreshLayout.setRefreshing(true);
+        tag = query;
+        tagTextView.setText("#"+tag);
+        imageList.clear();
+        imageList.setNextUrl(generateUrl(tag));
+        onRefresh();
+    }
+
 }

@@ -47,10 +47,11 @@ public class ImageInfoList {
      * @param thumbnail
      * @param standard
      */
-    public void add(String thumbnail, String standard) {
+    public void add(String thumbnail, String standard,String text) {
         ImageInfo img = new ImageInfo();
         img.setThumbnail(thumbnail);
         img.setStandard(standard);
+        img.setText(text);
         this.imageInfoList.addFirst(img);
     }
 }
