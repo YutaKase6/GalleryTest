@@ -28,6 +28,9 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
 
     private LinearLayout expandLinearLayout;
 
+    /**
+     * 画像説明文用textView
+     */
     private TextView textView;
 
     private Context context;
@@ -59,8 +62,8 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
 
             // 画像がタッチされた時の処理
             // タッチされた画像を拡大し、表示する
-            // (すでに用意してある拡大画像用imageViewに画像をセットし表示をVisibleに変更する)
-            // ここに書くのはよくないかも…
+            // (すでに用意してある拡大画像用imageViewに画像をセットしレイアウトの表示をVisibleに変更する)
+            // ここに書くのはよくないかも…(このせいでメンバ変数多い)
             viewHolder.squaredImageView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -78,7 +81,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
 
     /**
      * 標準サイズの画像を設定し表示する
-     *
+     * 画像の説明文もtextViewにセットする
      * @param position index
      * @param view
      */

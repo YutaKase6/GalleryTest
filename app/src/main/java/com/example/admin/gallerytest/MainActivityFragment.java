@@ -20,11 +20,9 @@ import android.widget.TextView;
 public class MainActivityFragment extends Fragment implements LoaderManager.LoaderCallbacks<String>, SwipeRefreshLayout.OnRefreshListener {
 
     /**
-     * 検索したいタグ
+     * 初期タグ
      */
-//    private String tag = "iQon";
-    private String tag = "photooftheday";
-
+    private String tag = "iQon";
 
     /**
      * 画像の情報を持ったクラスのリスト
@@ -35,19 +33,20 @@ public class MainActivityFragment extends Fragment implements LoaderManager.Load
      */
     private ParseInstagramImage parseInstagramImage = new ParseInstagramImage(this.imageList);
     /**
-     * 拡大用ImageView
-     */
-    private ImageView imageView;
-
-    /**
-     * 拡大用レイアウト
+     * 画像拡大画面時のレイアウト
      */
     private LinearLayout expandLinearLayout = null;
+
+    /**
+     * 拡大画像用ImageView
+     */
+    private ImageView imageView;
 
     /**
      * 拡大用説明文TextView
      */
     private TextView captionTextView = null;
+
 
     private SwipeRefreshLayout swipeRefreshLayout = null;
 
@@ -110,6 +109,7 @@ public class MainActivityFragment extends Fragment implements LoaderManager.Load
 
             @Override
             public boolean onQueryTextSubmit(String query) {
+                //検索ルーチン
                 search(query);
                 return false;
             }
@@ -120,11 +120,11 @@ public class MainActivityFragment extends Fragment implements LoaderManager.Load
             }
         });
 
-
+        //現在表示している画像のタグ表示
         tagTextView = (TextView)getView().findViewById(R.id.tag_textView);
         tagTextView.setText("#" + tag);
 
-
+        //拡大表示時のレイアウト
         expandLinearLayout = (LinearLayout)getView().findViewById(R.id.expand_LinearLayout);
         //拡大アイテムタッチ処理(アイテムを非表示にする)
         expandLinearLayout.setOnClickListener(new View.OnClickListener() {
@@ -188,6 +188,7 @@ public class MainActivityFragment extends Fragment implements LoaderManager.Load
             setAdapter(getView().findViewById(R.id.recyclerview));
         }
 
+        //データセットの変更を通知
         this.recyclerViewAdapter.notifyDataSetChanged();
         this.swipeRefreshLayout.setRefreshing(false);
 
@@ -206,15 +207,26 @@ public class MainActivityFragment extends Fragment implements LoaderManager.Load
         startLoader(0);
     }
 
+    /**
+     * タグからリクエストURLを生成
+     * @param tag
+     * @return
+     */
     public String generateUrl(String tag){
         return "https://api.instagram.com/v1/tags/" + tag + "/media/recent?client_id=8f159dc9bf334630a37fdf4e607044cb";
     }
 
+    /**
+     * 検索ルーチン
+     * これまでの画像情報リストをクリア
+     * 新しいタグでリクエストを送信
+     * @param query
+     */
     public void search(String query){
-        swipeRefreshLayout.setRefreshing(true);
+        swipeRefreshLayout.setRefreshing(true);//更新アニメーションスタート
         tag = query;
-        tagTextView.setText("#"+tag);
-        imageList.clear();
+        tagTextView.setText("#"+tag);//現在のタグを表示するテキストビューを更新
+        imageList.clear();//リストのクリア
         imageList.setNextUrl(generateUrl(tag));
         onRefresh();
     }
