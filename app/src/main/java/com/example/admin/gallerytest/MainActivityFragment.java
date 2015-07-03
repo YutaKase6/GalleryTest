@@ -22,7 +22,7 @@ public class MainActivityFragment extends Fragment implements LoaderManager.Load
     /**
      * 初期タグ
      */
-    private String tag = "iQon";
+    private String tag = "iQON";
 
     /**
      * 画像の情報を持ったクラスのリスト
@@ -133,7 +133,9 @@ public class MainActivityFragment extends Fragment implements LoaderManager.Load
                 expandLinearLayout.setVisibility(View.INVISIBLE);
             }
         });
+
         imageView = (ImageView)getView().findViewById(R.id.imageView);
+        captionTextView = (TextView)getView().findViewById(R.id.caption_textView);
 
         //初回
         if (this.recyclerViewAdapter == null) {
@@ -148,7 +150,8 @@ public class MainActivityFragment extends Fragment implements LoaderManager.Load
     }
 
     private void setAdapter(View view) {
-        this.recyclerViewAdapter = new RecyclerViewAdapter(getActivity(),this.imageList.getImageInfoList(),imageView,expandLinearLayout,(TextView)getView().findViewById(R.id.caption_textView));
+        this.recyclerViewAdapter = new RecyclerViewAdapter(getActivity(),this.imageList.getImageInfoList(),
+                imageView,expandLinearLayout,captionTextView);
         ((RecyclerView) view).setAdapter(this.recyclerViewAdapter);
 
     }
