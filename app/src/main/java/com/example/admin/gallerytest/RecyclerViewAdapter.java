@@ -84,7 +84,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
      * 画像の説明文もtextViewにセットする
      *
      * @param position index
-     * @param view
+     * @param view セットするView
      */
     public void setStandardImage(int position, ImageView view) {
         String url = urls.get(position).getStandard();
