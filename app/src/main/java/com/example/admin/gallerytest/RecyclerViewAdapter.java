@@ -22,22 +22,22 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
      */
     private List<ImageInfo> urls;
     /**
+     * 拡大画面用レイアウト
+     */
+    private LinearLayout expandLinearLayout;
+    /**
      * 拡大画像ImageView
      */
     private ImageView standardImageView;
-
-    private LinearLayout expandLinearLayout;
-
     /**
-     * 画像説明文用textView
+     * 拡大画像説明文用textView
      */
     private TextView textView;
 
     private Context context;
 
 
-
-    public RecyclerViewAdapter(Context context, List<ImageInfo> urls, ImageView iv,LinearLayout expandLinearLayout,TextView textView) {
+    public RecyclerViewAdapter(Context context, List<ImageInfo> urls, ImageView iv, LinearLayout expandLinearLayout, TextView textView) {
         super();
         this.context = context;
         this.urls = urls;
@@ -67,7 +67,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
             viewHolder.squaredImageView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    setStandardImage(position,standardImageView);
+                    setStandardImage(position, standardImageView);
                     expandLinearLayout.setVisibility(View.VISIBLE);
                 }
             });
@@ -82,13 +82,14 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
     /**
      * 標準サイズの画像を設定し表示する
      * 画像の説明文もtextViewにセットする
+     *
      * @param position index
      * @param view
      */
     public void setStandardImage(int position, ImageView view) {
-                String url = urls.get(position).getStandard();
-                Picasso.with(this.context).load(url).placeholder(R.drawable.loadingimage).into(view);
-                textView.setText(urls.get(position).getText());
+        String url = urls.get(position).getStandard();
+        Picasso.with(this.context).load(url).placeholder(R.drawable.loadingimage).into(view);
+        textView.setText(urls.get(position).getText());
     }
 
     static class ViewHolder extends RecyclerView.ViewHolder {

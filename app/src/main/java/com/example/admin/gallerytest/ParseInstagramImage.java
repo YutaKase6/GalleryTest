@@ -21,6 +21,7 @@ public class ParseInstagramImage extends ParseJson {
 
     /**
      * ƒŒƒXƒ|ƒ“ƒX‚Ì‰ğÍ
+     *
      * @param str
      */
     @Override

@@ -4,6 +4,7 @@ import java.util.LinkedList;
 import java.util.List;
 
 /**
+ * ImageInfoのリストクラス
  * Created by admin on 2015/06/29.
  */
 public class ImageInfoList {
@@ -43,11 +44,13 @@ public class ImageInfoList {
     }
 
     /**
-     * 保持しているリストに画像追加（URL）を追加する
-     * @param thumbnail
-     * @param standard
+     * 保持しているリストに画像情報を追加する
+     *
+     * @param thumbnail サムネイルURL
+     * @param standard 標準画像URL
+     * @param text 画像に関するテキスト情報
      */
-    public void add(String thumbnail, String standard,String text) {
+    public void add(String thumbnail, String standard, String text) {
         ImageInfo img = new ImageInfo();
         img.setThumbnail(thumbnail);
         img.setStandard(standard);

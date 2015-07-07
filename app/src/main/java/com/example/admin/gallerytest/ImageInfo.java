@@ -1,6 +1,7 @@
 package com.example.admin.gallerytest;
 
 /**
+ * ‰æ‘œ‚Ìî•ñ‚ğ•Û‚·‚éƒNƒ‰ƒX
  * Created by admin on 2015/06/25.
  */
 public class ImageInfo {

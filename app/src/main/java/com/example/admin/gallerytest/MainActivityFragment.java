@@ -18,12 +18,10 @@ import android.widget.TextView;
 
 
 public class MainActivityFragment extends Fragment implements LoaderManager.LoaderCallbacks<String>, SwipeRefreshLayout.OnRefreshListener {
-
     /**
      * 初期タグ
      */
     private String tag = "iQON";
-
     /**
      * 画像の情報を持ったクラスのリスト
      */
@@ -36,24 +34,24 @@ public class MainActivityFragment extends Fragment implements LoaderManager.Load
      * 画像拡大画面時のレイアウト
      */
     private LinearLayout expandLinearLayout = null;
-
     /**
      * 拡大画像用ImageView
      */
     private ImageView imageView;
-
     /**
      * 拡大用説明文TextView
      */
     private TextView captionTextView = null;
-
-
-    private SwipeRefreshLayout swipeRefreshLayout = null;
-
-    private RecyclerViewAdapter recyclerViewAdapter = null;
-
     /**
-     * tag表示用TextView
+     * 通常時SwipeRefreshLayout
+     */
+    private SwipeRefreshLayout swipeRefreshLayout = null;
+    /**
+     * RecyclerViewのadapter
+     */
+    private RecyclerViewAdapter recyclerViewAdapter = null;
+    /**
+     * 現在のtag表示用TextView
      */
     private TextView tagTextView = null;
 
@@ -85,35 +83,40 @@ public class MainActivityFragment extends Fragment implements LoaderManager.Load
         super.onActivityCreated(savedInstanceState);
         setRetainInstance(true);
 
-
+        //SwipeRefreshLayoutのID取得
         this.swipeRefreshLayout = (SwipeRefreshLayout) getView().findViewById(R.id.SwipeRefreshLayout);
         // プログレスアニメーションの色指定
         this.swipeRefreshLayout.setColorScheme(android.R.color.holo_blue_bright, android.R.color.holo_green_light, android.R.color.holo_orange_light, android.R.color.holo_red_light);
         // 更新リスナーの追加
         this.swipeRefreshLayout.setOnRefreshListener(MainActivityFragment.this);
 
-
-        RecyclerView recyclerView = (RecyclerView)getView().findViewById(R.id.recyclerview);
+        //RecyclerViewのID取得
+        RecyclerView recyclerView = (RecyclerView) getView().findViewById(R.id.recyclerview);
         //グリッドビューっぽく
         recyclerView.setLayoutManager(new GridLayoutManager(getActivity(), getResources().getInteger(R.integer.num)));
 
-
-        Toolbar toolbar = (Toolbar)getView().findViewById(R.id.toolbar);
-        toolbar.setTitle("Instagram Gallery");
+        //ToolbarのID取得
+        Toolbar toolbar = (Toolbar) getView().findViewById(R.id.toolbar);
+        //Toolbarに表示するタイトルをセット
+//        toolbar.setTitle(R.string.app_name);
+        //xmlからレイアウトを挿入
         toolbar.inflateMenu(R.menu.search);
 
-
-        SearchView searchView = (SearchView)toolbar.getMenu().findItem(R.id.menu_search).getActionView();
+        //SearchView(検索窓のようなView)
+        //SearchViewのID取得
+        SearchView searchView = (SearchView) toolbar.getMenu().findItem(R.id.menu_search).getActionView();
+        //入力欄に表示する文字(何を入力すべきかを暗示させる)
         searchView.setQueryHint("tag");
+        //検索実行時のリスナーを登録
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
-
+            //検索ボタンが押されたときに呼ばれる
             @Override
             public boolean onQueryTextSubmit(String query) {
                 //検索ルーチン
                 search(query);
                 return false;
             }
-
+            //入力テキストが変更するたびに呼ばれる
             @Override
             public boolean onQueryTextChange(String newText) {
                 return false;
@@ -121,11 +124,11 @@ public class MainActivityFragment extends Fragment implements LoaderManager.Load
         });
 
         //現在表示している画像のタグ表示
-        tagTextView = (TextView)getView().findViewById(R.id.tag_textView);
+        tagTextView = (TextView) getView().findViewById(R.id.tag_textView);
         tagTextView.setText("#" + tag);
 
         //拡大表示時のレイアウト
-        expandLinearLayout = (LinearLayout)getView().findViewById(R.id.expand_LinearLayout);
+        expandLinearLayout = (LinearLayout) getView().findViewById(R.id.expand_LinearLayout);
         //拡大アイテムタッチ処理(アイテムを非表示にする)
         expandLinearLayout.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -134,8 +137,10 @@ public class MainActivityFragment extends Fragment implements LoaderManager.Load
             }
         });
 
-        imageView = (ImageView)getView().findViewById(R.id.imageView);
-        captionTextView = (TextView)getView().findViewById(R.id.caption_textView);
+        //拡大時用のImageViewのID取得
+        imageView = (ImageView) getView().findViewById(R.id.imageView);
+        //拡大時用のTextViewのID取得
+        captionTextView = (TextView) getView().findViewById(R.id.caption_textView);
 
         //初回
         if (this.recyclerViewAdapter == null) {
@@ -145,17 +150,25 @@ public class MainActivityFragment extends Fragment implements LoaderManager.Load
         }
         //画面回転
         else {
-            setAdapter(recyclerView);
+            setRecyclerViewAdapter(recyclerView);
         }
     }
 
-    private void setAdapter(View view) {
-        this.recyclerViewAdapter = new RecyclerViewAdapter(getActivity(),this.imageList.getImageInfoList(),
-                imageView,expandLinearLayout,captionTextView);
-        ((RecyclerView) view).setAdapter(this.recyclerViewAdapter);
+    /**
+     * 引数のviewにrecyclerViewAdapterをセットする
+     * @param recyclerView セットするRecyclerView
+     */
+    private void setRecyclerViewAdapter(RecyclerView recyclerView) {
+        this.recyclerViewAdapter = new RecyclerViewAdapter(getActivity(), this.imageList.getImageInfoList(),
+                imageView, expandLinearLayout, captionTextView);
+        recyclerView.setAdapter(this.recyclerViewAdapter);
 
     }
 
+    /**
+     * あたえられたidのLoaderを再び呼び出す
+     * @param id Loaderのid
+     */
     private void startLoader(int id) {
         getLoaderManager().restartLoader(id, null, MainActivityFragment.this);
     }
@@ -163,9 +176,9 @@ public class MainActivityFragment extends Fragment implements LoaderManager.Load
     /**
      * 与えられたIDに対する新しいLoaderをインスタンス化し返す
      *
-     * @param id
-     * @param args
-     * @return
+     * @param id Loaderのid
+     * @param args Bundle
+     * @return Loader
      */
     @Override
     public Loader<String> onCreateLoader(int id, Bundle args) {
@@ -177,8 +190,8 @@ public class MainActivityFragment extends Fragment implements LoaderManager.Load
     /**
      * loaderがロードを完了した時に呼ばれる
      *
-     * @param loader
-     * @param data
+     * @param loader Loader
+     * @param data 取得したデータ
      */
     @Override
     public void onLoadFinished(Loader<String> loader, String data) {
@@ -186,13 +199,14 @@ public class MainActivityFragment extends Fragment implements LoaderManager.Load
 
         // APIのレスポンスを解析する
         this.parseInstagramImage.loadJson(data);
-
+        //アダプターをセット
         if (this.recyclerViewAdapter == null) {
-            setAdapter(getView().findViewById(R.id.recyclerview));
+            setRecyclerViewAdapter((RecyclerView)getView().findViewById(R.id.recyclerview));
         }
 
         //データセットの変更を通知
         this.recyclerViewAdapter.notifyDataSetChanged();
+        //更新アニメーションの停止
         this.swipeRefreshLayout.setRefreshing(false);
 
     }
@@ -212,26 +226,32 @@ public class MainActivityFragment extends Fragment implements LoaderManager.Load
 
     /**
      * タグからリクエストURLを生成
-     * @param tag
-     * @return
+     *
+     * @param tag 検索したいタグ
+     * @return APIへのリクエストURL
      */
-    public String generateUrl(String tag){
-        return "https://api.instagram.com/v1/tags/" + tag + "/media/recent?client_id=8f159dc9bf334630a37fdf4e607044cb";
+    public String generateUrl(String tag) {
+        return R.string.API_entry_point_before_tag + tag + R.string.API_entry_point_after_tag;
     }
 
     /**
      * 検索ルーチン
      * これまでの画像情報リストをクリア
      * 新しいタグでリクエストを送信
-     * @param query
+     *
+     * @param query 入力されたクエリ
      */
-    public void search(String query){
-        swipeRefreshLayout.setRefreshing(true);//更新アニメーションスタート
+    public void search(String query) {
+        //更新アニメーションスタート
+        swipeRefreshLayout.setRefreshing(true);
         tag = query;
-        tagTextView.setText("#"+tag);//現在のタグを表示するテキストビューを更新
-        imageList.clear();//リストのクリア
+        //現在のタグを表示するテキストビューを更新
+        tagTextView.setText("#" + tag);
+        //画像リストのクリア
+        imageList.clear();
+        //リクエストURLのセット
         imageList.setNextUrl(generateUrl(tag));
+        //更新処理
         onRefresh();
     }
-
 }
