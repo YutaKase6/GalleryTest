@@ -16,6 +16,12 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import butterknife.ButterKnife;
+import butterknife.InjectView;
+import butterknife.OnClick;
+
+import static butterknife.ButterKnife.findById;
+
 
 public class MainActivityFragment extends Fragment implements LoaderManager.LoaderCallbacks<String> {
     /**
@@ -41,20 +47,24 @@ public class MainActivityFragment extends Fragment implements LoaderManager.Load
     /**
      * 画像拡大画面で使用されるレイアウト
      */
-    private LinearLayout expandLinearLayout = null;
+    @InjectView(R.id.expand_LinearLayout)
+    LinearLayout expandLinearLayout = null;
     /**
      * 拡大された画像を表示するImageView
      */
-    private ImageView imageView;
+    @InjectView(R.id.imageView)
+    ImageView imageView;
     /**
      * 画像拡大時、画像下部にテキストを表示するTextView
      */
-    private TextView captionTextView = null;
+    @InjectView(R.id.caption_textView)
+    TextView captionTextView = null;
 
     /**
      * 現在の検索結果のタグを表示するTextView
      */
-    private TextView tagTextView = null;
+    @InjectView(R.id.tag_textView)
+    TextView tagTextView = null;
 
     /**
      * RecyclerViewのadapter
@@ -98,6 +108,10 @@ public class MainActivityFragment extends Fragment implements LoaderManager.Load
                 return false;
             }
         });
+
+        //Injection
+        ButterKnife.inject(this, view);
+
         return view;
     }
 
@@ -128,9 +142,8 @@ public class MainActivityFragment extends Fragment implements LoaderManager.Load
         super.onActivityCreated(savedInstanceState);
         setRetainInstance(true);
 
-
         //RecyclerViewの設定
-        RecyclerView recyclerView = (RecyclerView) getView().findViewById(R.id.recyclerview);
+        RecyclerView recyclerView = findById(getView(), R.id.recyclerview);
         //RecyclerViewをグリッド表示に
         recyclerView.setLayoutManager(new GridLayoutManager(getActivity(), getResources().getInteger(R.integer.num)));
         //スクロール中にオートロードするためのリスナーを登録
@@ -147,7 +160,7 @@ public class MainActivityFragment extends Fragment implements LoaderManager.Load
 
 
         //Toolbarの設定
-        Toolbar toolbar = (Toolbar) getView().findViewById(R.id.toolbar);
+        Toolbar toolbar = findById(getView(), R.id.toolbar);
         //Toolbarのタイトル
         toolbar.setTitle(getString(R.string.app_name));
         //Toolbarのレイアウト
@@ -176,22 +189,7 @@ public class MainActivityFragment extends Fragment implements LoaderManager.Load
         });
 
         //検索結果のタグを設定
-        tagTextView = (TextView) getView().findViewById(R.id.tag_textView);
         tagTextView.setText("#" + tag);
-
-        //拡大表示用レイアウトのタッチ処理
-        //レイアウトを非表示にする
-        expandLinearLayout = (LinearLayout) getView().findViewById(R.id.expand_LinearLayout);
-        expandLinearLayout.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                expandLinearLayout.setVisibility(View.INVISIBLE);
-            }
-        });
-
-        //拡大画面用のViewのIDを取得
-        imageView = (ImageView) getView().findViewById(R.id.imageView);
-        captionTextView = (TextView) getView().findViewById(R.id.caption_textView);
 
         //初回
         if (this.recyclerViewAdapter == null) {
@@ -203,6 +201,16 @@ public class MainActivityFragment extends Fragment implements LoaderManager.Load
             setRecyclerViewAdapter(recyclerView);
         }
     }
+
+    /**
+     * 画像拡大画面がタッチされた時の処理
+     * アイテムを消す(レイアウトを非表示にする)
+     */
+    @OnClick(R.id.expand_LinearLayout)
+    void onClickExpandLinearLayout() {
+        expandLinearLayout.setVisibility(View.INVISIBLE);
+    }
+
 
     /**
      * RecyclerViewにadapterをセットする
@@ -253,7 +261,8 @@ public class MainActivityFragment extends Fragment implements LoaderManager.Load
         this.parseInstagramImage.loadJson(data);
         //アダプターをセット
         if (this.recyclerViewAdapter == null) {
-            setRecyclerViewAdapter((RecyclerView) getView().findViewById(R.id.recyclerview));
+            RecyclerView recyclerView = findById(getView(), R.id.recyclerview);
+            setRecyclerViewAdapter(recyclerView);
         }
 
         //データセットの変更を通知
@@ -289,6 +298,13 @@ public class MainActivityFragment extends Fragment implements LoaderManager.Load
         imageList.setNextUrl(myConfig.GenerateTagSearchEntryPoint(tag));
         //更新
         onRefresh();
+    }
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        //Viewが破棄されるときに必ず呼ぶ
+        ButterKnife.reset(this);
     }
 
 

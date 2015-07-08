@@ -13,6 +13,9 @@ import com.squareup.picasso.Picasso;
 
 import java.util.List;
 
+import butterknife.ButterKnife;
+import butterknife.InjectView;
+
 /**
  * Created by admin on 2015/07/02.
  */
@@ -91,18 +94,21 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
      * @param view     画像をセットするView
      */
     public void setStandardImage(int position, ImageView view) {
-        String url = urls.get(position).getStandard();
-        Picasso.with(this.context).load(url).placeholder(R.drawable.loadingimage).into(view);
+        String standardImageUrl = urls.get(position).getStandard();
+        Picasso.with(this.context).load(standardImageUrl).placeholder(R.drawable.loadingimage).into(view);
         textView.setText(urls.get(position).getText());
     }
 
     static class ViewHolder extends RecyclerView.ViewHolder {
-
+        /**
+         * サムネイル用imageView
+         */
+        @InjectView(R.id.squaredImageView)
         SquaredImageView squaredImageView;
 
         public ViewHolder(View itemView) {
             super(itemView);
-            squaredImageView = (SquaredImageView) itemView.findViewById(R.id.squaredImageView);
+            ButterKnife.inject(this, itemView);
         }
     }
 
