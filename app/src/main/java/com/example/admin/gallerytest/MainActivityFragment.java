@@ -234,7 +234,7 @@ public class MainActivityFragment extends Fragment implements LoaderManager.Load
     }
 
     /**
-     * 与えられたいｄに対するあたらしいLoaderをインスタンス化し返す
+     * 与えられたidに対するあたらしいLoaderをインスタンス化し返す
      *
      * @param id   Loaderのid
      * @param args Bundle
