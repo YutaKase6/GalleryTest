@@ -3,14 +3,9 @@ package com.example.admin.gallerytest;
 import android.content.AsyncTaskLoader;
 import android.content.Context;
 
-import org.apache.http.HttpResponse;
-import org.apache.http.HttpStatus;
-import org.apache.http.client.ClientProtocolException;
-import org.apache.http.client.HttpClient;
-import org.apache.http.client.ResponseHandler;
-import org.apache.http.client.methods.HttpGet;
-import org.apache.http.impl.client.DefaultHttpClient;
-import org.apache.http.util.EntityUtils;
+import com.squareup.okhttp.OkHttpClient;
+import com.squareup.okhttp.Request;
+import com.squareup.okhttp.Response;
 
 import java.io.IOException;
 
@@ -31,26 +26,20 @@ public class HttpAsyncTaskLoader extends AsyncTaskLoader<String> {
 
     @Override
     public String loadInBackground() {
-        //WEB APIの呼び出し(HTTP通信)
-        HttpClient httpClient = new DefaultHttpClient();
+        String result = null;
+        //リクエストオブジェクト生成
+        Request request = new Request.Builder().url(url).build();
+        //クライアントオブジェクト生成
+        OkHttpClient client = new OkHttpClient();
+        //リクエストを送信し結果を受け取る
         try {
-            String responseBody = httpClient.execute(new HttpGet(this.url), new ResponseHandler<String>() {
-                @Override
-                public String handleResponse(HttpResponse httpResponse) throws ClientProtocolException, IOException {
-                    //HTTP200の場合のみ結果を返す
-                    if (HttpStatus.SC_OK == httpResponse.getStatusLine().getStatusCode()) {
-                        return EntityUtils.toString(httpResponse.getEntity(), "UTF-8");
-                    }
-                    return null;
-                }
-            });
-            return responseBody;
+            Response response = client.newCall(request).execute();
+            result = response.body().string();
         } catch (IOException e) {
             e.printStackTrace();
-        } finally {
-            //通信終了後は接続をシャットダウン
-            httpClient.getConnectionManager().shutdown();
         }
-        return null;
+
+        return result;
+
     }
 }
