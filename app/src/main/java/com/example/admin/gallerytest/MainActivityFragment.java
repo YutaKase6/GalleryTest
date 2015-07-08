@@ -4,7 +4,6 @@ import android.app.Fragment;
 import android.app.LoaderManager;
 import android.content.Loader;
 import android.os.Bundle;
-import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SearchView;
@@ -18,84 +17,81 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 
-public class MainActivityFragment extends Fragment implements LoaderManager.LoaderCallbacks<String>, SwipeRefreshLayout.OnRefreshListener {
+public class MainActivityFragment extends Fragment implements LoaderManager.LoaderCallbacks<String> {
     /**
-     * İ’èŠÖŒW‚ğ•Û‚µ‚Ä‚¢‚éƒNƒ‰ƒX
-     * Œ»İ‚ÍEntry Point ‚Ìî•ñ‚ğ‚Á‚Ä‚¢‚é‚Ì‚İ
+     * è¨­å®šé–¢ä¿‚ã‚’ä¿æŒã—ã¦ã„ã‚‹ã‚¯ãƒ©ã‚¹
+     * â€»ç¾åœ¨ã¯Entry Pointã®æƒ…å ±ã‚’æŒã£ã¦ã„ã‚‹ã®ã¿
      */
     MyConfig myConfig = new MyConfig();
 
     /**
-     * ‰Šúƒ^ƒO
+     * æ¤œç´¢ã«ä½¿ç”¨ã•ã‚Œã‚‹ã‚¿ã‚°
+     * åˆæœŸå€¤ã¨ã—ã¦#iQON
      */
     private String tag = "iQON";
     /**
-     * ‰æ‘œ‚Ìî•ñ‚ğ‚Á‚½ƒNƒ‰ƒX‚ÌƒŠƒXƒg
+     * ç”»åƒæƒ…å ±ã®ãƒªã‚¹ãƒˆ
      */
     private ImageInfoList imageList = new ImageInfoList(myConfig.GenerateTagSearchEntryPoint(tag));
     /**
-     * Instagram API ‰ğÍƒNƒ‰ƒX
+     * Instagram API è§£æã‚¯ãƒ©ã‚¹
      */
     private ParseInstagramImage parseInstagramImage = new ParseInstagramImage(this.imageList);
 
     /**
-     * ‰æ‘œŠg‘å‰æ–Ê‚ÌƒŒƒCƒAƒEƒg
+     * ç”»åƒæ‹¡å¤§ç”»é¢ã§ä½¿ç”¨ã•ã‚Œã‚‹ãƒ¬ã‚¤ã‚¢ã‚¦ãƒˆ
      */
     private LinearLayout expandLinearLayout = null;
     /**
-     * Šg‘å‰æ‘œ—pImageView
+     * æ‹¡å¤§ã•ã‚ŒãŸç”»åƒã‚’è¡¨ç¤ºã™ã‚‹ImageView
      */
     private ImageView imageView;
     /**
-     * Šg‘å—pà–¾•¶TextView
+     * ç”»åƒæ‹¡å¤§æ™‚ã€ç”»åƒä¸‹éƒ¨ã«ãƒ†ã‚­ã‚¹ãƒˆã‚’è¡¨ç¤ºã™ã‚‹TextView
      */
     private TextView captionTextView = null;
+
     /**
-     * ’ÊíSwipeRefreshLayout
-     */
-    private SwipeRefreshLayout swipeRefreshLayout = null;
-    /**
-     * Œ»İ‚Ìtag•\¦—pTextView
+     * ç¾åœ¨ã®æ¤œç´¢çµæœã®ã‚¿ã‚°ã‚’è¡¨ç¤ºã™ã‚‹TextView
      */
     private TextView tagTextView = null;
 
     /**
-     * RecyclerView‚Ìadapter
+     * RecyclerViewã®adapter
+     * RecyclerViewã®ç®¡ç†ã‚’ã™ã‚‹
      */
     private RecyclerViewAdapter recyclerViewAdapter = null;
 
 
-    public MainActivityFragment() {
-    }
-
     /**
-     * Fragment‚ªViewŠK‘w‚ÉŠÖ˜A•t‚¯‚ç‚ê‚½‚ÉŒÄ‚Î‚ê‚é
+     * FragmentãŒViewéšå±¤ã«é–¢é€£ä»˜ã‘ã‚‰ã‚ŒãŸæ™‚ã«å‘¼ã°ã‚Œã‚‹
      *
      * @param inflater           LayoutInflater
      * @param container          ViewGroup
      * @param savedInstanceState Bundle
-     * @return Fragment‚Å•\¦‚·‚éView UI‚¢‚ç‚È‚¢‚È‚çnull
+     * @return Fragmentã§è¡¨ç¤ºã™ã‚‹View UIã„ã‚‰ãªã„ãªã‚‰null
      */
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        //Fragment‚Å•\¦‚·‚éView
+        //Fragmentã§è¡¨ç¤ºã™ã‚‹View
         final View view = inflater.inflate(R.layout.fragment_main, container, false);
 
-        //Back key‚Ìİ’è
-        //Fragment‚ÌView‚ÉOnKeyListener‚ğ“o˜^
-        //ˆ—‚ÍonPressBackKey()‚É‹Lq
-        //Activity‘¤‚©‚çgetView‚µ‚Äİ’è‚µ‚½‚Ù‚¤‚ª‚í‚©‚è‚â‚·‚¢H
+        //Back keyã®è¨­å®š
+        //Fragmentã®Viewã«OnKeyListenerã‚’ç™»éŒ²
+        //å®Ÿéš›ã®å‡¦ç†ã¯onPressBackKey()ã«è¨˜è¿°
+        //Activityå´ã‹ã‚‰getViewã—ã¦è¨­å®šã™ã‚‹ã‹è¿·ã„
         view.setFocusableInTouchMode(true);
         view.setOnKeyListener(new View.OnKeyListener() {
             @Override
             public boolean onKey(View v, int keyCode, KeyEvent event) {
-                //ACTION_DOWN‚Ì‚İÀs(ACTION_UP‚Í–³‹)
+                //ãƒœã‚¿ãƒ³ã‚’æŠ¼ã—ãŸã¨ãã®ã¿å®Ÿè¡Œ(ãƒœã‚¿ãƒ³ã‚’è©±ã—ãŸæ™‚ã¯ç„¡è¦–)
                 if (event.getAction() != KeyEvent.ACTION_DOWN) {
                     return false;
                 }
                 //Back Key
                 if (keyCode == KeyEvent.KEYCODE_BACK) {
+                    //å‡¦ç†ãƒ¡ã‚½ãƒƒãƒ‰ã‚’å‘¼ã³å‡ºã—
                     onPressBackKey();
                     return true;
                 }
@@ -106,14 +102,15 @@ public class MainActivityFragment extends Fragment implements LoaderManager.Load
     }
 
     /**
-     * Back Key‚ª‰Ÿ‚³‚ê‚½‚Æ‚«‚ÉŒÄ‚Î‚ê‚é
+     * Back KeyãŒæŠ¼ã•ã‚ŒãŸæ™‚ã«å‘¼ã°ã‚Œã‚‹ãƒ¡ã‚½ãƒƒãƒ‰
      */
     private void onPressBackKey() {
-        //‰æ‘œ‚ªŠg‘å‚³‚ê‚Ä‚¢‚é‚È‚ç‚»‚ê‚ğÁ‚·(INVISIVLE‚É•ÏX)
+        // ç”»åƒãŒæ‹¡å¤§è¡¨ç¤ºã•ã‚Œã¦ã„ã‚‹ãªã‚‰ã°ã€ãã‚Œã‚’éè¡¨ç¤ºã«ã™ã‚‹
         if (expandLinearLayout != null && expandLinearLayout.getVisibility() == View.VISIBLE) {
             expandLinearLayout.setVisibility(View.INVISIBLE);
         }
-        //Šg‘å‚³‚ê‚Ä‚¢‚È‚¢‚È‚çActivity‚ğI—¹‚·‚é
+        // é€šå¸¸çŠ¶æ…‹
+        // Activityã‚’çµ‚äº†ã™ã‚‹
         else {
             getActivity().finish();
         }
@@ -121,8 +118,8 @@ public class MainActivityFragment extends Fragment implements LoaderManager.Load
     }
 
     /**
-     * Activity‚ÌonCreate()‚Ì’¼Œã‚ÉŒÄ‚Î‚ê‚é
-     * Activity, Fragment €”õok
+     * Activityã®onCreate()ã®ç›´å¾Œã«å‘¼ã°ã‚Œã‚‹
+     * Activity, Fragment æº–å‚™ok
      *
      * @param savedInstanceState Bundle
      */
@@ -131,54 +128,60 @@ public class MainActivityFragment extends Fragment implements LoaderManager.Load
         super.onActivityCreated(savedInstanceState);
         setRetainInstance(true);
 
-        //SwipeRefreshLayout‚ÌIDæ“¾
-        this.swipeRefreshLayout = (SwipeRefreshLayout) getView().findViewById(R.id.SwipeRefreshLayout);
-        // ƒvƒƒOƒŒƒXƒAƒjƒ[ƒVƒ‡ƒ“‚ÌFw’è
-        this.swipeRefreshLayout.setColorScheme(android.R.color.holo_blue_bright, android.R.color.holo_green_light, android.R.color.holo_orange_light, android.R.color.holo_red_light);
-        // XVƒŠƒXƒi[‚Ì’Ç‰Á
-        this.swipeRefreshLayout.setOnRefreshListener(MainActivityFragment.this);
 
-        //RecyclerView‚ÌIDæ“¾
+        //RecyclerViewã®è¨­å®š
         RecyclerView recyclerView = (RecyclerView) getView().findViewById(R.id.recyclerview);
-        //ƒOƒŠƒbƒhƒrƒ…[‚Á‚Û‚­
+        //RecyclerViewã‚’ã‚°ãƒªãƒƒãƒ‰è¡¨ç¤ºã«
         recyclerView.setLayoutManager(new GridLayoutManager(getActivity(), getResources().getInteger(R.integer.num)));
+        //ã‚¹ã‚¯ãƒ­ãƒ¼ãƒ«ä¸­ã«ã‚ªãƒ¼ãƒˆãƒ­ãƒ¼ãƒ‰ã™ã‚‹ãŸã‚ã®ãƒªã‚¹ãƒŠãƒ¼ã‚’ç™»éŒ²
+        //ã‚ªãƒ¼ãƒˆãƒ­ãƒ¼ãƒ‰é–¢ä¿‚ã®å‡¦ç†ã¯EndlessScrollListenerã«è¨˜è¿°
+        recyclerView.setOnScrollListener(new EndlessScrollListener((GridLayoutManager) recyclerView.getLayoutManager(), getResources().getInteger(R.integer.visible_threshold)) {
+            @Override
+            public void onLoadMore() {
+                //ãƒ­ãƒ¼ãƒ‰å‡¦ç†ã‚’ã“ã“ã«è¨˜è¿°
 
-        //Toolbar‚ÌIDæ“¾
+                //æ›´æ–°å‡¦ç†
+                onRefresh();
+            }
+        });
+
+
+        //Toolbarã®è¨­å®š
         Toolbar toolbar = (Toolbar) getView().findViewById(R.id.toolbar);
-        //Toolbar‚É•\¦‚·‚éƒ^ƒCƒgƒ‹‚ğƒZƒbƒg
+        //Toolbarã®ã‚¿ã‚¤ãƒˆãƒ«
         toolbar.setTitle(getString(R.string.app_name));
-        //xml‚©‚çƒŒƒCƒAƒEƒg‚ğ‘}“ü
+        //Toolbarã®ãƒ¬ã‚¤ã‚¢ã‚¦ãƒˆ
         toolbar.inflateMenu(R.menu.search);
 
-        //SearchView(ŒŸõ‘‹‚Ì‚æ‚¤‚ÈView)
-        //SearchView‚ÌIDæ“¾
+        //æ¤œç´¢çª“ã®è¨­å®š(SearchView)
         SearchView searchView = (SearchView) toolbar.getMenu().findItem(R.id.menu_search).getActionView();
-        //“ü—Í—“‚É•\¦‚·‚é•¶š(‰½‚ğ“ü—Í‚·‚×‚«‚©‚ğˆÃ¦‚³‚¹‚é)
+        //å…¥åŠ›æ¬„ã«ã€å…¥åŠ›å‰ã«è¡¨ç¤ºã™ã‚‹æ–‡å­—ã‚’è¨­å®š
+        //å…¥åŠ›æ¬„ã«ã©ã‚“ãªå†…å®¹ã‚’å…¥åŠ›ã™ã¹ãã‹ã‚’æš—ç¤º
         searchView.setQueryHint(getString(R.string.query_hint));
-        //ŒŸõÀs‚ÌƒŠƒXƒi[‚ğ“o˜^
+        //æ¤œç´¢ãƒœã‚¿ãƒ³ãŒæŠ¼ã•ã‚ŒãŸæ™‚ã®ãƒªã‚¹ãƒŠãƒ¼ã‚’ç™»éŒ²
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
-            //ŒŸõƒ{ƒ^ƒ“‚ª‰Ÿ‚³‚ê‚½‚Æ‚«‚ÉŒÄ‚Î‚ê‚é
             @Override
             public boolean onQueryTextSubmit(String query) {
-                //ŒŸõƒ‹[ƒ`ƒ“
+                //æ¤œç´¢ãƒœã‚¿ãƒ³ãŒæŠ¼ã•ã‚ŒãŸæ™‚ã®å‡¦ç†ã‚’è¨˜è¿°
                 search(query);
                 return false;
             }
 
-            //“ü—ÍƒeƒLƒXƒg‚ª•ÏX‚·‚é‚½‚Ñ‚ÉŒÄ‚Î‚ê‚é
+            //ãƒ†ã‚­ã‚¹ãƒˆãŒå…¥åŠ›ã•ã‚Œã‚‹åº¦å‘¼ã°ã‚Œã‚‹
+            //ä»Šå›ã¯ä½¿ã‚ãªã„
             @Override
             public boolean onQueryTextChange(String newText) {
                 return false;
             }
         });
 
-        //Œ»İ•\¦‚µ‚Ä‚¢‚é‰æ‘œ‚Ìƒ^ƒO‚ğ•\¦‚·‚éView
+        //æ¤œç´¢çµæœã®ã‚¿ã‚°ã‚’è¨­å®š
         tagTextView = (TextView) getView().findViewById(R.id.tag_textView);
         tagTextView.setText("#" + tag);
 
-        //Šg‘å•\¦‚ÌƒŒƒCƒAƒEƒg
+        //æ‹¡å¤§è¡¨ç¤ºç”¨ãƒ¬ã‚¤ã‚¢ã‚¦ãƒˆã®ã‚¿ãƒƒãƒå‡¦ç†
+        //ãƒ¬ã‚¤ã‚¢ã‚¦ãƒˆã‚’éè¡¨ç¤ºã«ã™ã‚‹
         expandLinearLayout = (LinearLayout) getView().findViewById(R.id.expand_LinearLayout);
-        //Šg‘åƒAƒCƒeƒ€ƒ^ƒbƒ`ˆ—(ƒAƒCƒeƒ€‚ğ”ñ•\¦‚É‚·‚é)
         expandLinearLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -186,50 +189,46 @@ public class MainActivityFragment extends Fragment implements LoaderManager.Load
             }
         });
 
-        //Šg‘å—p‚ÌImageView‚ÌIDæ“¾
+        //æ‹¡å¤§ç”»é¢ç”¨ã®Viewã®IDã‚’å–å¾—
         imageView = (ImageView) getView().findViewById(R.id.imageView);
-        //Šg‘å—p‚ÌTextView‚ÌIDæ“¾
         captionTextView = (TextView) getView().findViewById(R.id.caption_textView);
 
-        //‰‰ñ
+        //åˆå›
         if (this.recyclerViewAdapter == null) {
-            // ƒAƒjƒ[ƒVƒ‡ƒ“ŠJn
-            this.swipeRefreshLayout.setRefreshing(true);
-            onRefresh(); // XVˆ—
+            //æ›´æ–°å‡¦ç†
+            onRefresh();
         }
-        //‰æ–Ê‰ñ“]
+        //ç”»é¢å›è»¢
         else {
             setRecyclerViewAdapter(recyclerView);
         }
     }
 
     /**
-     * ˆø”‚Ìview‚ÉrecyclerViewAdapter‚ğƒZƒbƒg‚·‚é
+     * RecyclerViewã«adapterã‚’ã‚»ãƒƒãƒˆã™ã‚‹
      *
-     * @param recyclerView ƒZƒbƒg‚·‚éRecyclerView
+     * @param recyclerView ã‚»ãƒƒãƒˆã™ã‚‹RecyclerView
      */
     private void setRecyclerViewAdapter(RecyclerView recyclerView) {
-        //Adapter‚Ì¶¬
         this.recyclerViewAdapter = new RecyclerViewAdapter(getActivity(), this.imageList.getImageInfoList(),
                 imageView, expandLinearLayout, captionTextView);
-        //View‚Éadapter‚ğƒZƒbƒg
         recyclerView.setAdapter(this.recyclerViewAdapter);
 
     }
 
     /**
-     * ‚ ‚½‚¦‚ç‚ê‚½id‚ÌLoader‚ğÄ‚ÑŒÄ‚Ño‚·
+     * ä¸ãˆã‚‰ã‚ŒãŸidã®Loaderã‚’å‘¼ã³å‡ºã™
      *
-     * @param id Loader‚Ìid
+     * @param id Loaderã®id
      */
     private void startLoader(int id) {
         getLoaderManager().restartLoader(id, null, MainActivityFragment.this);
     }
 
     /**
-     * —^‚¦‚ç‚ê‚½ID‚É‘Î‚·‚éV‚µ‚¢Loader‚ğƒCƒ“ƒXƒ^ƒ“ƒX‰»‚µ•Ô‚·
+     * ä¸ãˆã‚‰ã‚ŒãŸã„ï½„ã«å¯¾ã™ã‚‹ã‚ãŸã‚‰ã—ã„Loaderã‚’ã‚¤ãƒ³ã‚¹ã‚¿ãƒ³ã‚¹åŒ–ã—è¿”ã™
      *
-     * @param id   Loader‚Ìid
+     * @param id   Loaderã®id
      * @param args Bundle
      * @return Loader
      */
@@ -241,26 +240,24 @@ public class MainActivityFragment extends Fragment implements LoaderManager.Load
     }
 
     /**
-     * loader‚ªƒ[ƒh‚ğŠ®—¹‚µ‚½‚ÉŒÄ‚Î‚ê‚é
+     * loaderãŒãƒ­ãƒ¼ãƒ‰ã‚’å®Œäº†ã—ãŸæ™‚ã«å‘¼ã°ã‚Œã‚‹
      *
      * @param loader Loader
-     * @param data   æ“¾‚µ‚½ƒf[ƒ^
+     * @param data   å–å¾—ã—ãŸãƒ‡ãƒ¼ã‚¿
      */
     @Override
     public void onLoadFinished(Loader<String> loader, String data) {
         if (data == null) return;
 
-        // API‚ÌƒŒƒXƒ|ƒ“ƒX‚ğ‰ğÍ‚·‚é
+        //APIã®ãƒ¬ã‚¹ãƒãƒ³ã‚¹ã‚’è§£æã™ã‚‹
         this.parseInstagramImage.loadJson(data);
-        //ƒAƒ_ƒvƒ^[‚ğƒZƒbƒg
+        //ã‚¢ãƒ€ãƒ—ã‚¿ãƒ¼ã‚’ã‚»ãƒƒãƒˆ
         if (this.recyclerViewAdapter == null) {
             setRecyclerViewAdapter((RecyclerView) getView().findViewById(R.id.recyclerview));
         }
 
-        //ƒf[ƒ^ƒZƒbƒg‚Ì•ÏX‚ğ’Ê’m
+        //ãƒ‡ãƒ¼ã‚¿ã‚»ãƒƒãƒˆã®å¤‰æ›´ã‚’é€šçŸ¥
         this.recyclerViewAdapter.notifyDataSetChanged();
-        //XVƒAƒjƒ[ƒVƒ‡ƒ“‚Ì’â~
-        this.swipeRefreshLayout.setRefreshing(false);
 
     }
 
@@ -270,31 +267,29 @@ public class MainActivityFragment extends Fragment implements LoaderManager.Load
     }
 
     /**
-     * æ“¾ƒf[ƒ^‚ÌXV
+     * å–å¾—ãƒ‡ãƒ¼ã‚¿ã®æ›´æ–°
      */
-    @Override
     public void onRefresh() {
         startLoader(0);
     }
 
     /**
-     * ŒŸõƒ‹[ƒ`ƒ“
-     * ‚±‚ê‚Ü‚Å‚Ì‰æ‘œî•ñƒŠƒXƒg‚ğƒNƒŠƒA
-     * V‚µ‚¢ƒ^ƒO‚ÅƒŠƒNƒGƒXƒg‚ğ‘—M
+     * æ¤œç´¢ãƒ«ãƒ¼ãƒãƒ³
+     * ã“ã‚Œã¾ã§ã®ç”»åƒæƒ…å ±ã‚’ã‚¯ãƒªã‚¢
+     * æ–°ã—ã„ã‚¿ã‚°ã§ãƒªã‚¯ã‚¨ã‚¹ãƒˆã‚’é€ä¿¡
      *
-     * @param query “ü—Í‚³‚ê‚½ƒNƒGƒŠ
+     * @param query å…¥åŠ›ã•ã‚ŒãŸã‚¯ã‚¨ãƒª
      */
     public void search(String query) {
-        //XVƒAƒjƒ[ƒVƒ‡ƒ“ƒXƒ^[ƒg
-        swipeRefreshLayout.setRefreshing(true);
         tag = query;
-        //Œ»İ‚Ìƒ^ƒO‚ğ•\¦‚·‚éƒeƒLƒXƒgƒrƒ…[‚ğXV
-        tagTextView.setText("#" + tag);
-        //‰æ‘œƒŠƒXƒg‚ÌƒNƒŠƒA
         imageList.clear();
-        //ƒŠƒNƒGƒXƒgURL‚ÌƒZƒbƒg
+        //æ¤œç´¢çµæœã®è¡¨ç¤ºã‚’å¤‰æ›´
+        tagTextView.setText("#" + tag);
+        //ãƒªã‚¯ã‚¨ã‚¹ãƒˆURLã‚’è¨­å®š
         imageList.setNextUrl(myConfig.GenerateTagSearchEntryPoint(tag));
-        //XVˆ—
+        //æ›´æ–°
         onRefresh();
     }
+
+
 }

@@ -4,18 +4,18 @@ import java.util.LinkedList;
 import java.util.List;
 
 /**
- * ImageInfo‚ÌƒŠƒXƒgƒNƒ‰ƒX
+ * ImageInfoã®ãƒªã‚¹ãƒˆã‚¯ãƒ©ã‚¹
  * Created by admin on 2015/06/29.
  */
 public class ImageInfoList {
 
     /**
-     * ‰æ‘œî•ñ‚ÌƒŠƒXƒg
+     * ç”»åƒæƒ…å ±ã®ãƒªã‚¹ãƒˆ
      */
     private LinkedList<ImageInfo> imageInfoList = new LinkedList<ImageInfo>();
 
     /**
-     * Ÿ‚Ì‰æ‘œ‚ğæ“¾‚·‚é‚½‚ß‚ÌURL
+     * æ¬¡ã®ç”»åƒã‚’å–å¾—ã™ã‚‹ãŸã‚ã®URL
      */
     private String nextUrl = null;
 
@@ -37,25 +37,25 @@ public class ImageInfoList {
     }
 
     /**
-     * •Û‚µ‚Ä‚¢‚éƒŠƒXƒg‚ÌƒNƒŠƒA
+     * ä¿æŒã—ã¦ã„ã‚‹ãƒªã‚¹ãƒˆã‚’ã‚¯ãƒªã‚¢ã™ã‚‹ãƒ¡ã‚½ãƒƒãƒ‰
      */
     public void clear() {
         this.imageInfoList.clear();
     }
 
     /**
-     * •Û‚µ‚Ä‚¢‚éƒŠƒXƒg‚É‰æ‘œî•ñ‚ğ’Ç‰Á‚·‚é
+     * ä¿æŒã—ã¦ã„ã‚‹ãƒªã‚¹ãƒˆã«ç”»åƒæƒ…å ±ã‚’è¿½åŠ ã™ã‚‹ãƒ¡ã‚½ãƒƒãƒ‰
      *
-     * @param thumbnail ƒTƒ€ƒlƒCƒ‹URL
-     * @param standard  •W€‰æ‘œURL
-     * @param text      ‰æ‘œ‚ÉŠÖ‚·‚éƒeƒLƒXƒgî•ñ
+     * @param thumbnail è¿½åŠ ã—ãŸã„ç”»åƒã®ã‚µãƒ ãƒã‚¤ãƒ«ç”»åƒURL
+     * @param standard  è¿½åŠ ã—ãŸã„ç”»åƒã®æ¨™æº–è§£åƒåº¦ç”»åƒURL
+     * @param text      è¿½åŠ ã—ãŸã„ç”»åƒã«é–¢ã™ã‚‹ãƒ†ã‚­ã‚¹ãƒˆæƒ…å ±(Caption)
      */
     public void add(String thumbnail, String standard, String text) {
         ImageInfo img = new ImageInfo();
         img.setThumbnail(thumbnail);
         img.setStandard(standard);
         img.setText(text);
-        this.imageInfoList.addFirst(img);
+        this.imageInfoList.add(img);
     }
 }
 

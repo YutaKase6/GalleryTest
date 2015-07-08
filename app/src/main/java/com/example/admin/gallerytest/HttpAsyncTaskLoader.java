@@ -20,7 +20,7 @@ import java.io.IOException;
 public class HttpAsyncTaskLoader extends AsyncTaskLoader<String> {
 
     /**
-     * API‚ÌURL
+     * APIã®URL
      */
     private String url = null;
 
@@ -31,13 +31,13 @@ public class HttpAsyncTaskLoader extends AsyncTaskLoader<String> {
 
     @Override
     public String loadInBackground() {
-        //WEB API‚ÌŒÄ‚Ño‚µ(HTTP’ÊM)
+        //WEB APIã®å‘¼ã³å‡ºã—(HTTPé€šä¿¡)
         HttpClient httpClient = new DefaultHttpClient();
         try {
             String responseBody = httpClient.execute(new HttpGet(this.url), new ResponseHandler<String>() {
                 @Override
                 public String handleResponse(HttpResponse httpResponse) throws ClientProtocolException, IOException {
-                    //HTTP200‚Ìê‡‚Ì‚İŒ‹‰Ê‚ğ•Ô‚·
+                    //HTTP200ã®å ´åˆã®ã¿çµæœã‚’è¿”ã™
                     if (HttpStatus.SC_OK == httpResponse.getStatusLine().getStatusCode()) {
                         return EntityUtils.toString(httpResponse.getEntity(), "UTF-8");
                     }
@@ -48,7 +48,7 @@ public class HttpAsyncTaskLoader extends AsyncTaskLoader<String> {
         } catch (IOException e) {
             e.printStackTrace();
         } finally {
-            //’ÊMI—¹‚ÍAÚ‘±‚ğƒVƒƒƒbƒgƒ_ƒEƒ“
+            //é€šä¿¡çµ‚äº†å¾Œã¯æ¥ç¶šã‚’ã‚·ãƒ£ãƒƒãƒˆãƒ€ã‚¦ãƒ³
             httpClient.getConnectionManager().shutdown();
         }
         return null;

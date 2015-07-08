@@ -11,9 +11,14 @@ import java.io.IOException;
 public class ParseJson {
     protected String content;
 
+    /**
+     * JSONæ–‡å­—åˆ—ã‚’JsonNodeã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆã«å¤‰æ›
+     *
+     * @param str JSONæ–‡å­—åˆ—
+     * @return JsonNode
+     */
     protected JsonNode getJsonNode(String str) {
         try {
-            //JSON•¶š—ñ‚ğAJSONNodeƒIƒuƒWƒFƒNƒg‚É•ÏŠ·
             return new ObjectMapper().readTree(str);
         } catch (IOException e) {
             e.printStackTrace();
@@ -21,7 +26,11 @@ public class ParseJson {
         return null;
     }
 
-    // JSON•¶š—ñ‚ğ“Ç‚İ‚Ş
+    /**
+     * JSONæ–‡å­—åˆ—ã‚’èª­ã¿è¾¼ã‚€
+     *
+     * @param str JSONæ–‡å­—åˆ—
+     */
     public void loadJson(String str) {
     }
 }

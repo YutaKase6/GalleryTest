@@ -10,7 +10,7 @@ import java.util.Iterator;
 public class ParseInstagramImage extends ParseJson {
 
     /**
-     * ‰æ‘œî•ñ‚ÌƒŠƒXƒg
+     * ç”»åƒæƒ…å ±ã®ãƒªã‚¹ãƒˆ
      */
     private ImageInfoList imageList = null;
 
@@ -20,21 +20,22 @@ public class ParseInstagramImage extends ParseJson {
     }
 
     /**
-     * ƒŒƒXƒ|ƒ“ƒX‚Ì‰ğÍ
+     * ãƒ¬ã‚¹ãƒãƒ³ã‚¹ã®è§£æ
      *
-     * @param str
+     * @param str ãƒ¬ã‚¹ãƒãƒ³ã‚¹(JSONæ–‡å­—åˆ—)
      */
     @Override
     public void loadJson(String str) {
+        //JSONæ–‡å­—åˆ—ã‚’JsonNodeã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆã«å¤‰æ›
         JsonNode root = getJsonNode(str);
         if (root != null) {
-            // Ÿ‚ÌURL‚ğæ“¾
+            // æ¬¡ã®URLã‚’å–å¾—
             this.imageList.setNextUrl(root.path("pagination").path("next_url").asText());
 
             Iterator<JsonNode> ite = root.path("data").elements();
             while (ite.hasNext()) {
                 JsonNode j = ite.next();
-                // ‰æ‘œî•ñiURL,captionj‚ğƒŠƒXƒg‚É’Ç‰Á
+                // ç”»åƒæƒ…å ±(URL,caption)ã‚’ãƒªã‚¹ãƒˆã«è¿½åŠ 
                 this.imageList.add(j.path("images").path("thumbnail").path("url").asText(),
                         j.path("images").path("standard_resolution").path("url").asText(),
                         j.path("caption").path("text").asText());

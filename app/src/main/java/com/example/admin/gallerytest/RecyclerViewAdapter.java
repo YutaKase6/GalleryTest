@@ -18,19 +18,19 @@ import java.util.List;
  */
 public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapter.ViewHolder> {
     /**
-     * ‰æ‘œî•ñ‚ÌƒŠƒXƒg
+     * ç”»åƒæƒ…å ±ã®ãƒªã‚¹ãƒˆ
      */
     private List<ImageInfo> urls;
     /**
-     * Šg‘å‰æ–Ê—pƒŒƒCƒAƒEƒg
+     * æ‹¡å¤§ç”»é¢ç”¨ãƒ¬ã‚¤ã‚¢ã‚¦ãƒˆ
      */
     private LinearLayout expandLinearLayout;
     /**
-     * Šg‘å‰æ‘œImageView
+     * æ‹¡å¤§ç”»åƒç”¨ImageView
      */
     private ImageView standardImageView;
     /**
-     * Šg‘å‰æ‘œà–¾•¶—ptextView
+     * æ‹¡å¤§ç”»é¢æ™‚ã€ç”»åƒã®èª¬æ˜æ–‡ç”¨TextView
      */
     private TextView textView;
 
@@ -57,13 +57,12 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
     public void onBindViewHolder(ViewHolder viewHolder, int i) {
         if (urls.size() > 0) {
             final int position = i;
-            // ƒrƒ…[‚É•\¦‚·‚é‰æ‘œ‚ÌURL‚ğİ’è‚µ•\¦
+            // Viewã«ç”»åƒã‚’è¡¨ç¤º
             Picasso.with(this.context).load(urls.get(i).getThumbnail()).placeholder(R.drawable.loadingimage).into(viewHolder.squaredImageView);
 
-            // ‰æ‘œ‚ªƒ^ƒbƒ`‚³‚ê‚½‚Ìˆ—
-            // ƒ^ƒbƒ`‚³‚ê‚½‰æ‘œ‚ğŠg‘å‚µA•\¦‚·‚é
-            // (‚·‚Å‚É—pˆÓ‚µ‚Ä‚ ‚éŠg‘å‰æ‘œ—pimageView‚É‰æ‘œ‚ğƒZƒbƒg‚µƒŒƒCƒAƒEƒg‚Ì•\¦‚ğVisible‚É•ÏX‚·‚é)
-            // ‚±‚±‚É‘‚­‚Ì‚Í‚æ‚­‚È‚¢‚©‚àc(‚±‚Ì‚¹‚¢‚Åƒƒ“ƒo•Ï”‘½‚¢)
+            // ç”»åƒãŒã‚¿ãƒƒãƒã•ã‚ŒãŸæ™‚ã®å‡¦ç†
+            // ç”»åƒã‚’æ‹¡å¤§è¡¨ç¤º(æ‹¡å¤§ç”»é¢ç”¨ãƒ¬ã‚¤ã‚¢ã‚¦ãƒˆã‚’è¡¨ç¤º)
+            // ã“ã“ã«æ›¸ãã®ã¯è‰¯ããªã„ï¼Ÿ
             viewHolder.squaredImageView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -74,17 +73,22 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
         }
     }
 
+    /**
+     * RecyclerViewã«å«ã¾ã‚Œã¦ã„ã‚‹ã‚¢ã‚¤ãƒ†ãƒ ã®æ•°ã‚’è¿”ã™
+     *
+     * @return RecyclerViewã«å«ã¾ã‚Œã¦ã„ã‚‹ã‚¢ã‚¤ãƒ†ãƒ ã®æ•°
+     */
     @Override
     public int getItemCount() {
         return urls.size();
     }
 
     /**
-     * •W€ƒTƒCƒY‚Ì‰æ‘œ‚ğİ’è‚µ•\¦‚·‚é
-     * ‰æ‘œ‚Ìà–¾•¶‚àtextView‚ÉƒZƒbƒg‚·‚é
+     * æ¨™æº–è§£åƒåº¦ã®ç”»åƒã‚’å–å¾—ã—ã€è¡¨ç¤º
+     * ã¤ã„ã§ã«ç”»åƒã®èª¬æ˜ã‚‚å–å¾—ã—ã€è¡¨ç¤º
      *
      * @param position index
-     * @param view     ƒZƒbƒg‚·‚éView
+     * @param view     ç”»åƒã‚’ã‚»ãƒƒãƒˆã™ã‚‹View
      */
     public void setStandardImage(int position, ImageView view) {
         String url = urls.get(position).getStandard();

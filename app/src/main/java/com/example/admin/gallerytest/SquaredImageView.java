@@ -19,7 +19,7 @@ public class SquaredImageView extends ImageView {
     @Override
     protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
         super.onMeasure(widthMeasureSpec, heightMeasureSpec);
-        // ƒrƒ…[‚Ì‚‚³‚ğ‰¡•‚Æ“¯‚¶‚É‚·‚é
+        // ãƒ“ãƒ¥ãƒ¼ã®é«˜ã•ã‚’æ¨ªå¹…ã¨åŒã˜ã«ã™ã‚‹
         setMeasuredDimension(getMeasuredWidth(), getMeasuredWidth());
     }
 

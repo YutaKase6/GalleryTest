@@ -1,20 +1,20 @@
 package com.example.admin.gallerytest;
 
 /**
- * ‰æ‘œ‚Ìî•ñ‚ğ•Û‚·‚éƒNƒ‰ƒX
+ * ç”»é¢ã®æƒ…å ±ã‚’ä¿æŒã™ã‚‹ã‚¯ãƒ©ã‚¹
  * Created by admin on 2015/06/25.
  */
 public class ImageInfo {
     /**
-     * •W€‰ğ‘œ“x‚Ì‰æ‘œURL
+     * æ¨™æº–è§£åƒåº¦ã®ç”»åƒURL
      */
     private String standard;
     /**
-     * ƒTƒ€ƒlƒCƒ‹‰æ‘œ‚ÌURL
+     * ã‚µãƒ ãƒã‚¤ãƒ«ç”»åƒã®URL
      */
     private String thumbnail;
     /**
-     * à–¾
+     * ç”»åƒã®èª¬æ˜(caption)
      */
     private String text;
 
