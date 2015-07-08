@@ -11,7 +11,7 @@ import java.io.IOException;
 public class ParseJson {
     protected String content;
 
-    protected JsonNode getJsonNode(String str){
+    protected JsonNode getJsonNode(String str) {
         try {
             //JSON文字列を、JSONNodeオブジェクトに変換
             return new ObjectMapper().readTree(str);

@@ -47,8 +47,8 @@ public class ImageInfoList {
      * 保持しているリストに画像情報を追加する
      *
      * @param thumbnail サムネイルURL
-     * @param standard 標準画像URL
-     * @param text 画像に関するテキスト情報
+     * @param standard  標準画像URL
+     * @param text      画像に関するテキスト情報
      */
     public void add(String thumbnail, String standard, String text) {
         ImageInfo img = new ImageInfo();

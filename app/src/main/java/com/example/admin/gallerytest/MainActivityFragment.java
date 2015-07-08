@@ -9,6 +9,7 @@ import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -19,17 +20,24 @@ import android.widget.TextView;
 
 public class MainActivityFragment extends Fragment implements LoaderManager.LoaderCallbacks<String>, SwipeRefreshLayout.OnRefreshListener {
     /**
+     * 設定関係を保持しているクラス
+     * 現在はEntry Point の情報を持っているのみ
+     */
+    MyConfig myConfig = new MyConfig();
+
+    /**
      * 初期タグ
      */
     private String tag = "iQON";
     /**
      * 画像の情報を持ったクラスのリスト
      */
-    private ImageInfoList imageList = new ImageInfoList(generateUrl(tag));
+    private ImageInfoList imageList = new ImageInfoList(myConfig.GenerateTagSearchEntryPoint(tag));
     /**
      * Instagram API 解析クラス
      */
     private ParseInstagramImage parseInstagramImage = new ParseInstagramImage(this.imageList);
+
     /**
      * 画像拡大画面時のレイアウト
      */
@@ -47,13 +55,15 @@ public class MainActivityFragment extends Fragment implements LoaderManager.Load
      */
     private SwipeRefreshLayout swipeRefreshLayout = null;
     /**
-     * RecyclerViewのadapter
-     */
-    private RecyclerViewAdapter recyclerViewAdapter = null;
-    /**
      * 現在のtag表示用TextView
      */
     private TextView tagTextView = null;
+
+    /**
+     * RecyclerViewのadapter
+     */
+    private RecyclerViewAdapter recyclerViewAdapter = null;
+
 
     public MainActivityFragment() {
     }
@@ -61,22 +71,60 @@ public class MainActivityFragment extends Fragment implements LoaderManager.Load
     /**
      * FragmentがView階層に関連付けられた時に呼ばれる
      *
-     * @param inflater
-     * @param container
-     * @param savedInstanceState
+     * @param inflater           LayoutInflater
+     * @param container          ViewGroup
+     * @param savedInstanceState Bundle
      * @return Fragmentで表示するView UIいらないならnull
      */
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.fragment_main, container, false);
+        //Fragmentで表示するView
+        final View view = inflater.inflate(R.layout.fragment_main, container, false);
+
+        //Back keyの設定
+        //FragmentのViewにOnKeyListenerを登録
+        //処理はonPressBackKey()に記述
+        //Activity側からgetViewして設定したほうがわかりやすい？
+        view.setFocusableInTouchMode(true);
+        view.setOnKeyListener(new View.OnKeyListener() {
+            @Override
+            public boolean onKey(View v, int keyCode, KeyEvent event) {
+                //ACTION_DOWNのみ実行(ACTION_UPは無視)
+                if (event.getAction() != KeyEvent.ACTION_DOWN) {
+                    return false;
+                }
+                //Back Key
+                if (keyCode == KeyEvent.KEYCODE_BACK) {
+                    onPressBackKey();
+                    return true;
+                }
+                return false;
+            }
+        });
+        return view;
+    }
+
+    /**
+     * Back Keyが押されたときに呼ばれる
+     */
+    private void onPressBackKey() {
+        //画像が拡大されているならそれを消す(INVISIVLEに変更)
+        if (expandLinearLayout != null && expandLinearLayout.getVisibility() == View.VISIBLE) {
+            expandLinearLayout.setVisibility(View.INVISIBLE);
+        }
+        //拡大されていないならActivityを終了する
+        else {
+            getActivity().finish();
+        }
+
     }
 
     /**
      * ActivityのonCreate()の直後に呼ばれる
      * Activity, Fragment 準備ok
      *
-     * @param savedInstanceState
+     * @param savedInstanceState Bundle
      */
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
@@ -98,7 +146,7 @@ public class MainActivityFragment extends Fragment implements LoaderManager.Load
         //ToolbarのID取得
         Toolbar toolbar = (Toolbar) getView().findViewById(R.id.toolbar);
         //Toolbarに表示するタイトルをセット
-//        toolbar.setTitle(R.string.app_name);
+        toolbar.setTitle(getString(R.string.app_name));
         //xmlからレイアウトを挿入
         toolbar.inflateMenu(R.menu.search);
 
@@ -106,7 +154,7 @@ public class MainActivityFragment extends Fragment implements LoaderManager.Load
         //SearchViewのID取得
         SearchView searchView = (SearchView) toolbar.getMenu().findItem(R.id.menu_search).getActionView();
         //入力欄に表示する文字(何を入力すべきかを暗示させる)
-        searchView.setQueryHint("tag");
+        searchView.setQueryHint(getString(R.string.query_hint));
         //検索実行時のリスナーを登録
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             //検索ボタンが押されたときに呼ばれる
@@ -116,6 +164,7 @@ public class MainActivityFragment extends Fragment implements LoaderManager.Load
                 search(query);
                 return false;
             }
+
             //入力テキストが変更するたびに呼ばれる
             @Override
             public boolean onQueryTextChange(String newText) {
@@ -123,7 +172,7 @@ public class MainActivityFragment extends Fragment implements LoaderManager.Load
             }
         });
 
-        //現在表示している画像のタグ表示
+        //現在表示している画像のタグを表示するView
         tagTextView = (TextView) getView().findViewById(R.id.tag_textView);
         tagTextView.setText("#" + tag);
 
@@ -156,17 +205,21 @@ public class MainActivityFragment extends Fragment implements LoaderManager.Load
 
     /**
      * 引数のviewにrecyclerViewAdapterをセットする
+     *
      * @param recyclerView セットするRecyclerView
      */
     private void setRecyclerViewAdapter(RecyclerView recyclerView) {
+        //Adapterの生成
         this.recyclerViewAdapter = new RecyclerViewAdapter(getActivity(), this.imageList.getImageInfoList(),
                 imageView, expandLinearLayout, captionTextView);
+        //Viewにadapterをセット
         recyclerView.setAdapter(this.recyclerViewAdapter);
 
     }
 
     /**
      * あたえられたidのLoaderを再び呼び出す
+     *
      * @param id Loaderのid
      */
     private void startLoader(int id) {
@@ -176,7 +229,7 @@ public class MainActivityFragment extends Fragment implements LoaderManager.Load
     /**
      * 与えられたIDに対する新しいLoaderをインスタンス化し返す
      *
-     * @param id Loaderのid
+     * @param id   Loaderのid
      * @param args Bundle
      * @return Loader
      */
@@ -191,7 +244,7 @@ public class MainActivityFragment extends Fragment implements LoaderManager.Load
      * loaderがロードを完了した時に呼ばれる
      *
      * @param loader Loader
-     * @param data 取得したデータ
+     * @param data   取得したデータ
      */
     @Override
     public void onLoadFinished(Loader<String> loader, String data) {
@@ -201,7 +254,7 @@ public class MainActivityFragment extends Fragment implements LoaderManager.Load
         this.parseInstagramImage.loadJson(data);
         //アダプターをセット
         if (this.recyclerViewAdapter == null) {
-            setRecyclerViewAdapter((RecyclerView)getView().findViewById(R.id.recyclerview));
+            setRecyclerViewAdapter((RecyclerView) getView().findViewById(R.id.recyclerview));
         }
 
         //データセットの変更を通知
@@ -225,16 +278,6 @@ public class MainActivityFragment extends Fragment implements LoaderManager.Load
     }
 
     /**
-     * タグからリクエストURLを生成
-     *
-     * @param tag 検索したいタグ
-     * @return APIへのリクエストURL
-     */
-    public String generateUrl(String tag) {
-        return R.string.API_entry_point_before_tag + tag + R.string.API_entry_point_after_tag;
-    }
-
-    /**
      * 検索ルーチン
      * これまでの画像情報リストをクリア
      * 新しいタグでリクエストを送信
@@ -250,7 +293,7 @@ public class MainActivityFragment extends Fragment implements LoaderManager.Load
         //画像リストのクリア
         imageList.clear();
         //リクエストURLのセット
-        imageList.setNextUrl(generateUrl(tag));
+        imageList.setNextUrl(myConfig.GenerateTagSearchEntryPoint(tag));
         //更新処理
         onRefresh();
     }
