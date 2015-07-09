@@ -10,6 +10,7 @@ import com.squareup.okhttp.Response;
 import java.io.IOException;
 
 /**
+ * HTTP通信を非同期で実行するクラス
  * Created by admin on 2015/06/25.
  */
 public class HttpAsyncTaskLoader extends AsyncTaskLoader<String> {

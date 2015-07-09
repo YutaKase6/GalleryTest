@@ -17,6 +17,7 @@ import butterknife.ButterKnife;
 import butterknife.InjectView;
 
 /**
+ * RecyclerViewのAdapterクラス
  * Created by admin on 2015/07/02.
  */
 public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapter.ViewHolder> {

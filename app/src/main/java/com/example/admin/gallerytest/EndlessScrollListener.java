@@ -4,6 +4,7 @@ import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 
 /**
+ * スクロールでアイテムを自動取得するリスナー
  * Created by admin on 2015/07/08.
  */
 public abstract class EndlessScrollListener extends RecyclerView.OnScrollListener {
@@ -36,6 +37,10 @@ public abstract class EndlessScrollListener extends RecyclerView.OnScrollListene
      */
     private boolean loading = true;
 
+    /**
+     * RecyclerViewのレイアウトマネージャー
+     * アイテムの総数等を取得する為等に使用する
+     */
     private GridLayoutManager GridLayoutManager;
 
     public EndlessScrollListener(GridLayoutManager gridLayoutManager, int visibleThreshold) {

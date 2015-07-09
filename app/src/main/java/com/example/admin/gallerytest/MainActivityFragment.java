@@ -22,7 +22,9 @@ import butterknife.OnClick;
 
 import static butterknife.ButterKnife.findById;
 
-
+/**
+ * メインのFragment
+ */
 public class MainActivityFragment extends Fragment implements LoaderManager.LoaderCallbacks<String> {
     /**
      * 設定関係を保持しているクラス

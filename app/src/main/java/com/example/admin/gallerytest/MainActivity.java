@@ -3,7 +3,9 @@ package com.example.admin.gallerytest;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 
-
+/**
+ * メインのActivity
+ */
 public class MainActivity extends AppCompatActivity {
 
     @Override

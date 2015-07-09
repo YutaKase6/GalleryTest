@@ -6,6 +6,8 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import java.io.IOException;
 
 /**
+ * JSON文字列を解析する親クラス
+ * 実際のAPIに合わせた処理は子クラスでloadJsonをオーバーライドして処理する
  * Created by admin on 2015/06/25.
  */
 public class ParseJson {

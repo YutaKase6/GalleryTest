@@ -5,6 +5,8 @@ import android.util.AttributeSet;
 import android.widget.ImageView;
 
 /**
+ * 正方形のimageView(画像の高さを幅と同じにする)
+ * ImageViewの拡張クラス
  * Created by admin on 2015/06/28.
  */
 public class SquaredImageView extends ImageView {

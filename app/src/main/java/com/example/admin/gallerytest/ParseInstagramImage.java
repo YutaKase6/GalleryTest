@@ -5,6 +5,7 @@ import com.fasterxml.jackson.databind.JsonNode;
 import java.util.Iterator;
 
 /**
+ * JSON文字列のInstagraｍAPIのレスポンスを解析するクラス
  * Created by admin on 2015/06/25.
  */
 public class ParseInstagramImage extends ParseJson {
