@@ -16,8 +16,10 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import butterknife.Bind;
+import butterknife.BindInt;
+import butterknife.BindString;
 import butterknife.ButterKnife;
-import butterknife.InjectView;
 import butterknife.OnClick;
 
 import static butterknife.ButterKnife.findById;
@@ -49,23 +51,23 @@ public class MainActivityFragment extends Fragment implements LoaderManager.Load
     /**
      * 画像拡大画面で使用されるレイアウト
      */
-    @InjectView(R.id.expand_LinearLayout)
+    @Bind(R.id.expand_LinearLayout)
     LinearLayout expandLinearLayout = null;
     /**
      * 拡大された画像を表示するImageView
      */
-    @InjectView(R.id.imageView)
+    @Bind(R.id.imageView)
     ImageView imageView;
     /**
      * 画像拡大時、画像下部にテキストを表示するTextView
      */
-    @InjectView(R.id.caption_textView)
+    @Bind(R.id.caption_textView)
     TextView captionTextView = null;
 
     /**
      * 現在の検索結果のタグを表示するTextView
      */
-    @InjectView(R.id.tag_textView)
+    @Bind(R.id.tag_textView)
     TextView tagTextView = null;
 
     /**
@@ -73,6 +75,30 @@ public class MainActivityFragment extends Fragment implements LoaderManager.Load
      * RecyclerViewの管理をする
      */
     private RecyclerViewAdapter recyclerViewAdapter = null;
+
+    /**
+     * グリッドの列の数
+     */
+    @BindInt(R.integer.num)
+    public int columnNum;
+    /**
+     * アイテムをオートロードするための閾値
+     * まだ表示していないアイテムの数が閾値以下になった時、ロードを開始する
+     */
+    @BindInt(R.integer.visible_threshold)
+    public int visibleThreshold;
+
+    /**
+     * このアプリの名前
+     */
+    @BindString(R.string.app_name)
+    public String appName;
+    /**
+     * 検索窓に表示しておく文字列
+     * 入力のヒントとなる
+     */
+    @BindString(R.string.query_hint)
+    public String queryHint;
 
 
     /**
@@ -88,7 +114,6 @@ public class MainActivityFragment extends Fragment implements LoaderManager.Load
                              Bundle savedInstanceState) {
         //Fragmentで表示するView
         final View view = inflater.inflate(R.layout.fragment_main, container, false);
-
         //Back keyの設定
         //FragmentのViewにOnKeyListenerを登録
         //実際の処理はonPressBackKey()に記述
@@ -112,7 +137,7 @@ public class MainActivityFragment extends Fragment implements LoaderManager.Load
         });
 
         //Injection
-        ButterKnife.inject(this, view);
+        ButterKnife.bind(this, view);
 
         return view;
     }
@@ -147,10 +172,10 @@ public class MainActivityFragment extends Fragment implements LoaderManager.Load
         //RecyclerViewの設定
         RecyclerView recyclerView = findById(getView(), R.id.recyclerview);
         //RecyclerViewをグリッド表示に
-        recyclerView.setLayoutManager(new GridLayoutManager(getActivity(), getResources().getInteger(R.integer.num)));
+        recyclerView.setLayoutManager(new GridLayoutManager(getActivity(), columnNum));
         //スクロール中にオートロードするためのリスナーを登録
         //オートロード関係の処理はEndlessScrollListenerに記述
-        recyclerView.setOnScrollListener(new EndlessScrollListener((GridLayoutManager) recyclerView.getLayoutManager(), getResources().getInteger(R.integer.visible_threshold)) {
+        recyclerView.setOnScrollListener(new EndlessScrollListener((GridLayoutManager) recyclerView.getLayoutManager(), visibleThreshold) {
             @Override
             public void onLoadMore() {
                 //ロード処理をここに記述
@@ -164,7 +189,7 @@ public class MainActivityFragment extends Fragment implements LoaderManager.Load
         //Toolbarの設定
         Toolbar toolbar = findById(getView(), R.id.toolbar);
         //Toolbarのタイトル
-        toolbar.setTitle(getString(R.string.app_name));
+        toolbar.setTitle(appName);
         //Toolbarのレイアウト
         toolbar.inflateMenu(R.menu.search);
 
@@ -172,7 +197,7 @@ public class MainActivityFragment extends Fragment implements LoaderManager.Load
         SearchView searchView = (SearchView) toolbar.getMenu().findItem(R.id.menu_search).getActionView();
         //入力欄に、入力前に表示する文字を設定
         //入力欄にどんな内容を入力すべきかを暗示
-        searchView.setQueryHint(getString(R.string.query_hint));
+        searchView.setQueryHint(queryHint);
         //検索ボタンが押された時のリスナーを登録
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
@@ -209,7 +234,7 @@ public class MainActivityFragment extends Fragment implements LoaderManager.Load
      * アイテムを消す(レイアウトを非表示にする)
      */
     @OnClick(R.id.expand_LinearLayout)
-    void onClickExpandLinearLayout() {
+    public void onClickExpandLinearLayout() {
         expandLinearLayout.setVisibility(View.INVISIBLE);
     }
 
@@ -306,7 +331,7 @@ public class MainActivityFragment extends Fragment implements LoaderManager.Load
     public void onDestroyView() {
         super.onDestroyView();
         //Viewが破棄されるときに必ず呼ぶ
-        ButterKnife.reset(this);
+        ButterKnife.unbind(this);
     }
 
 

@@ -1,6 +1,8 @@
 package com.example.admin.gallerytest;
 
+import android.app.Activity;
 import android.content.Context;
+import android.graphics.drawable.Drawable;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -13,8 +15,10 @@ import com.squareup.picasso.Picasso;
 
 import java.util.List;
 
+import butterknife.Bind;
+import butterknife.BindDrawable;
 import butterknife.ButterKnife;
-import butterknife.InjectView;
+
 
 /**
  * RecyclerViewのAdapterクラス
@@ -40,6 +44,12 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
 
     private Context context;
 
+    /**
+     * アイテムロード中に表示する画像
+     */
+    @BindDrawable(R.drawable.loadingimage)
+    public Drawable loadingImage;
+
 
     public RecyclerViewAdapter(Context context, List<ImageInfo> urls, ImageView iv, LinearLayout expandLinearLayout, TextView textView) {
         super();
@@ -48,6 +58,8 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
         this.standardImageView = iv;
         this.expandLinearLayout = expandLinearLayout;
         this.textView = textView;
+        //bind 引数これで合ってるか不明(動きはする)
+        ButterKnife.bind(this,(Activity)this.context);
     }
 
 
@@ -62,7 +74,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
         if (urls.size() > 0) {
             final int position = i;
             // Viewに画像を表示
-            Picasso.with(this.context).load(urls.get(i).getThumbnail()).placeholder(R.drawable.loadingimage).into(viewHolder.squaredImageView);
+            Picasso.with(this.context).load(urls.get(i).getThumbnail()).placeholder(loadingImage).into(viewHolder.squaredImageView);
 
             // 画像がタッチされた時の処理
             // 画像を拡大表示(拡大画面用レイアウトを表示)
@@ -96,7 +108,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
      */
     public void setStandardImage(int position, ImageView view) {
         String standardImageUrl = urls.get(position).getStandard();
-        Picasso.with(this.context).load(standardImageUrl).placeholder(R.drawable.loadingimage).into(view);
+        Picasso.with(this.context).load(standardImageUrl).placeholder(loadingImage).into(view);
         textView.setText(urls.get(position).getText());
     }
 
@@ -104,12 +116,12 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
         /**
          * サムネイル用imageView
          */
-        @InjectView(R.id.squaredImageView)
+        @Bind(R.id.squaredImageView)
         SquaredImageView squaredImageView;
 
         public ViewHolder(View itemView) {
             super(itemView);
-            ButterKnife.inject(this, itemView);
+            ButterKnife.bind(this, itemView);
         }
     }
 
