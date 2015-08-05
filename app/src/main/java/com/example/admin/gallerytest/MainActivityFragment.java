@@ -52,7 +52,7 @@ public class MainActivityFragment extends Fragment implements LoaderManager.Load
      * 画像拡大画面で使用されるレイアウト
      */
     @Bind(R.id.expand_LinearLayout)
-    LinearLayout expandLinearLayout = null;
+    LinearLayout expandLinearLayout;
     /**
      * 拡大された画像を表示するImageView
      */
@@ -62,13 +62,13 @@ public class MainActivityFragment extends Fragment implements LoaderManager.Load
      * 画像拡大時、画像下部にテキストを表示するTextView
      */
     @Bind(R.id.caption_textView)
-    TextView captionTextView = null;
+    TextView captionTextView;
 
     /**
      * 現在の検索結果のタグを表示するTextView
      */
     @Bind(R.id.tag_textView)
-    TextView tagTextView = null;
+    TextView tagTextView;
 
     /**
      * RecyclerViewのadapter
